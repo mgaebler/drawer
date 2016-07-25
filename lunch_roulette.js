@@ -3,24 +3,27 @@
 module.exports = class LunchRoulette {
   // Start a join time window'
   constructor (groupSize=2, duration=60) {
-    this.startTime = Date.now()
     this.duration = duration * 60 * 1000;
-    this.endTime = this.startTime + this.duration
     this.players = new Set()
     this.groupSize = groupSize
     this.state = 'initialized'
+    this.groups = []
+  }
+
+  getTimeLeft(){
+    return Math.ceil((this.endTime - Date.now()) / 1000);
   }
 
   onTick () {
+    console.log('Seconds to go:', this.getTimeLeft())
     if (this.endTime < Date.now()){
       this.endGame()
     }
   }
 
   tick() {
-    // tick every second
-    this.tickEngine = setTimeout(this.tick, 1000)
-    console.log('tick!')
+    // ticks every second
+    this.tickEngine = setTimeout(this.tick.bind(this), 1000)
     this.onTick()
   }
 
@@ -30,8 +33,11 @@ module.exports = class LunchRoulette {
   }
 
   startGame() {
-    this.state = 'running'
     console.log('Game started')
+    this.startTime = Date.now()
+    this.endTime = this.startTime + this.duration
+    this.tick()
+    this.state = 'running'
   }
 
   abortGame() {
@@ -43,14 +49,29 @@ module.exports = class LunchRoulette {
     //'stop ticking'
     clearTimeout(this.tickEngine)
     this.state = 'ended'
-    this.displayPartnerList()
     console.log('Game ended')
+    this.displayPartnerList()
   }
 
   // 'Partner list will be displayed'
   displayPartnerList () {
-    this.players
-    this.groupSize
-    // @todo write a Partner algorithm
+    var groupCount = 0
+    var playerCount = 0
+
+    // @todo are enought players in the game ?
+
+    this.players.forEach((player) => {
+      // pop players and group them
+      this.groups[groupCount].push(player)
+      players.delete(player)
+
+      playerCount += 1
+      if(playerCount == this.groupSize){
+        // reset player counter
+        playerCount = 0
+        groupCount += 1
+      }
+
+    })
   }
 }
