@@ -3,6 +3,7 @@
 module.exports = class LunchRoulette {
   // Start a join time window'
   constructor (groupSize=2, duration=60) {
+    if(groupSize < 2) throw 'A group must have at least a size of 2.'
     this.duration = duration * 60 * 1000;
     this.players = new Set()
     this.groupSize = groupSize
@@ -58,12 +59,13 @@ module.exports = class LunchRoulette {
     var groupCount = 0
     var playerCount = 0
 
-    // @todo are enought players in the game ?
-
     this.players.forEach((player) => {
       // pop players and group them
+      if(!this.groups[groupCount]) {
+        this.groups[groupCount] = []
+      }
       this.groups[groupCount].push(player)
-      players.delete(player)
+      this.players.delete(player)
 
       playerCount += 1
       if(playerCount == this.groupSize){
