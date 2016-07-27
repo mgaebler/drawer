@@ -7,6 +7,7 @@ module.exports = class LunchRoulette {
     this.duration = duration * 60 * 1000;
     this.players = new Set()
     this.groupSize = groupSize
+    this.groupsReadyEvents = []
     this.state = 'initialized'
     this.groups = []
   }
@@ -16,7 +17,10 @@ module.exports = class LunchRoulette {
   }
 
   onTick () {
-    console.log('Seconds to go:', this.getTimeLeft())
+    if(this.getTimeLeft % 10){
+      console.log('Seconds to go:', this.getTimeLeft())
+    }
+
     if (this.endTime < Date.now()){
       this.endGame()
     }
@@ -51,15 +55,18 @@ module.exports = class LunchRoulette {
     clearTimeout(this.tickEngine)
     this.state = 'ended'
     console.log('Game ended')
-    this.displayPartnerList()
+    this.generateGroups()
   }
 
-  // 'Partner list will be displayed'
-  displayPartnerList () {
+  set onGroupsReady(cb){
+    this.groupsReadyEvents.push(cb)
+  }
+
+  generateGroups(){
     var groupCount = 0
     var playerCount = 0
 
-    this.players.forEach((player) => {
+    for(let player of this.players){
       // pop players and group them
       if(!this.groups[groupCount]) {
         this.groups[groupCount] = []
@@ -73,7 +80,12 @@ module.exports = class LunchRoulette {
         playerCount = 0
         groupCount += 1
       }
+    }
 
-    })
+    this.groupsReadyEvents.forEach((event) => event(this.groups))
+  }
+  // 'Partner list will be displayed'
+  displayPartnerList () {
+    console.log(this.groups)
   }
 }
