@@ -1,6 +1,6 @@
 
 // Game begins'
-module.exports = class LunchRoulette {
+module.exports = class Drawer {
   // Start a join time window'
   constructor (groupSize=2, duration=60) {
     if(groupSize < 2) throw 'A group must have at least a size of 2.'
@@ -8,28 +8,36 @@ module.exports = class LunchRoulette {
     this.players = new Set()
     this.groupSize = groupSize
     this.groupsReadyEvents = []
+    this.tickEvents = []
     this.state = 'initialized'
     this.groups = []
+
+    this.onTick = (secondsLeft) => {
+      // talk every tenth second
+      if(secondsLeft % 10 === 0){
+        console.log('Seconds to go:', secondsLeft)
+      }
+
+      // let the game end after a given time
+      if (this.endTime < Date.now()){
+        this.endGame()
+      }
+    }
   }
 
   getTimeLeft(){
     return Math.ceil((this.endTime - Date.now()) / 1000);
   }
 
-  onTick () {
-    if(this.getTimeLeft() % 10 === 0){
-      console.log('Seconds to go:', this.getTimeLeft())
-    }
-
-    if (this.endTime < Date.now()){
-      this.endGame()
-    }
+  set onTick (callback) {
+    this.tickEvents.push(callback)
   }
 
   tick() {
     // ticks every second
     this.tickEngine = setTimeout(this.tick.bind(this), 1000)
-    this.onTick()
+    // execute tick events
+    this.tickEvents.forEach((e) => e(this.getTimeLeft()));
   }
 
   //'Now people can join in by writing lunch in'
