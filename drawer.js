@@ -14,6 +14,8 @@ module.exports = class Drawer {
     this.tickEvents = []
     this.startEvents = []
     this.endEvents = []
+    this.addPlayerEvents = []
+    this.remPlayerEvents = []
 
     this.onTick = (secondsLeft) => {
       // talk every tenth second
@@ -48,6 +50,14 @@ module.exports = class Drawer {
     this.drawEvents.push(callback)
   }
 
+  set onPlayerAdd (callback) {
+    this.addPlayerEvents.push(callback)
+  }
+
+  set onPlayerRem (callback) {
+    this.remPlayerEvents.push(callback)
+  }
+
 
 
   tick() {
@@ -60,6 +70,12 @@ module.exports = class Drawer {
   //'Now people can join in by writing lunch in'
   addPlayer(player){
     this.players.add(player)
+    this.addPlayerEvents.forEach((e) => e())
+  }
+
+  remPlayer(player){
+    this.players.delete(player)
+    this.remPlayerEvents.forEach((e) => e())
   }
 
   startGame() {

@@ -67,6 +67,23 @@ describe('Drawer', () => {
       dr.endGame()
     })
 
+    it('should callback after adding a player', done => {
+
+      dr.onPlayerAdd = () => done()
+      dr.addPlayer('Mark')
+      dr.endGame()
+
+    })
+
+    it('should callback after removing a player', done => {
+
+      dr.onPlayerRem = () => done()
+      dr.addPlayer('Mark')
+      dr.remPlayer('Mark')
+      dr.endGame()
+
+    })
+
   })
 
   describe('draw algorithm', () => {
