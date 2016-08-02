@@ -17,7 +17,7 @@ module.exports = class LunchRoulette {
   }
 
   onTick () {
-    if(this.getTimeLeft % 10){
+    if(this.getTimeLeft() % 10 === 0){
       console.log('Seconds to go:', this.getTimeLeft())
     }
 
@@ -66,6 +66,7 @@ module.exports = class LunchRoulette {
     var groupCount = 0
     var playerCount = 0
 
+    // @todo this has to be more random
     for(let player of this.players){
       // pop players and group them
       if(!this.groups[groupCount]) {
