@@ -1,5 +1,3 @@
-
-// Game begins'
 module.exports = class Drawer {
   // Start a join time window'
   constructor (groupSize=2, duration=60) {
@@ -30,10 +28,6 @@ module.exports = class Drawer {
     }
   }
 
-  getTimeLeft(){
-    return Math.ceil((this.endTime - Date.now()) / 1000);
-  }
-
   set onTick (callback) {
     this.tickEvents.push(callback)
   }
@@ -58,13 +52,28 @@ module.exports = class Drawer {
     this.remPlayerEvents.push(callback)
   }
 
+  getTotalDuration(){
+    return (this.endTime - this.startTime) / 1000
+  }
+
+  getTimeLeft(){
+    let secondsLeft = Math.ceil((this.endTime - Date.now()) / 1000)
+    let percentLeft = Math.ceil(100 / this.getTotalDuration() * secondsLeft)
+    return {
+      inSeconds: secondsLeft,
+      inPercent: percentLeft
+    };
+  }
 
 
   tick() {
     // ticks every second
     this.tickEngine = setTimeout(this.tick.bind(this), 1000)
     // execute tick events
-    this.tickEvents.forEach((e) => e(this.getTimeLeft()));
+    this.tickEvents.forEach(e => {
+      let timeLeft = this.getTimeLeft()
+      e(timeLeft.inSeconds, timeLeft.inPercent)
+    })
   }
 
   //'Now people can join in by writing lunch in'
