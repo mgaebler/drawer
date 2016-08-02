@@ -7,10 +7,13 @@ module.exports = class Drawer {
     this.duration = duration * 60 * 1000;
     this.players = new Set()
     this.groupSize = groupSize
-    this.groupsReadyEvents = []
-    this.tickEvents = []
     this.state = 'initialized'
     this.groups = []
+
+    this.drawEvents = []
+    this.tickEvents = []
+    this.startEvents = []
+    this.endEvents = []
 
     this.onTick = (secondsLeft) => {
       // talk every tenth second
@@ -33,6 +36,20 @@ module.exports = class Drawer {
     this.tickEvents.push(callback)
   }
 
+  set onStart (callback) {
+    this.startEvents.push(callback)
+  }
+
+  set onEnd (callback) {
+    this.endEvents.push(callback)
+  }
+
+  set onDraw (callback) {
+    this.drawEvents.push(callback)
+  }
+
+
+
   tick() {
     // ticks every second
     this.tickEngine = setTimeout(this.tick.bind(this), 1000)
@@ -46,11 +63,12 @@ module.exports = class Drawer {
   }
 
   startGame() {
-    console.log('Game started')
+    // console.log('Game started')
     this.startTime = Date.now()
     this.endTime = this.startTime + this.duration
     this.tick()
     this.state = 'running'
+    this.startEvents.forEach(e => e(this.startTime, this.endTime))
   }
 
   abortGame() {
@@ -62,12 +80,9 @@ module.exports = class Drawer {
     //'stop ticking'
     clearTimeout(this.tickEngine)
     this.state = 'ended'
-    console.log('Game ended')
+    // console.log('Game ended')
+    this.endEvents.forEach(e => e(this.startTime, this.endTime))
     this.generateGroups()
-  }
-
-  set onGroupsReady(cb){
-    this.groupsReadyEvents.push(cb)
   }
 
   generateGroups(){
@@ -91,10 +106,6 @@ module.exports = class Drawer {
       }
     }
 
-    this.groupsReadyEvents.forEach((event) => event(this.groups))
-  }
-  // 'Partner list will be displayed'
-  displayPartnerList () {
-    console.log(this.groups)
+    this.drawEvents.forEach((event) => event(this.groups))
   }
 }

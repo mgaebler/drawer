@@ -5,74 +5,91 @@ describe('Drawer', () => {
 
   describe('Check game mechanics', () => {
 
-    lr = new Drawer(groupSize=3, duration=0.1)
+    dr = new Drawer(groupSize=3, duration=0.1)
 
-    after(() => delete lr)
+    after(() => delete dr)
 
     it('should show the correct number of players', () => {
-      lr.addPlayer('Mark')
-      lr.addPlayer('Jenny')
-      lr.addPlayer('Henric')
-      lr.addPlayer('Bronko')
+      dr.addPlayer('Mark')
+      dr.addPlayer('Jenny')
+      dr.addPlayer('Henric')
+      dr.addPlayer('Bronko')
       // count 3 players
-      assert.equal(lr.players.size, 4)
+      assert.equal(dr.players.size, 4)
     })
 
     it('should remove duplicates', () => {
-      lr.addPlayer('Mark')
-      lr.addPlayer('Jenny')
+      dr.addPlayer('Mark')
+      dr.addPlayer('Jenny')
 
-      assert.equal(lr.players.size, 4)
+      assert.equal(dr.players.size, 4)
     })
 
     it('should be declared running after start', () => {
-      lr.startGame()
-      assert.equal(lr.state, 'running')
+      dr.startGame()
+      assert.equal(dr.state, 'running')
     })
 
     it('should be declared ended after stop', () => {
-      lr.endGame()
-      assert.equal(lr.state, 'ended')
+      dr.endGame()
+      assert.equal(dr.state, 'ended')
     })
 
   })
 
-  describe('callbacks', () => {
-    it('should callback groups after ending', done => {
-      lr = new Drawer(groupSize=2, duration=0.1)
-      lr.onGroupsReady = (groups) => done()
+  describe('Check events', () => {
+    var dr;
 
-      lr.addPlayer('Mark')
-      lr.addPlayer('Jenny')
-      lr.addPlayer('Henric')
-      lr.addPlayer('Bronko')
+    beforeEach(() => dr = new Drawer(groupSize=2, duration=0.1))
+    afterEach(() => delete(dr))
 
-      lr.endGame()
-
+    it('should callback when game starts', done => {
+      dr.onStart = () => done()
+      dr.startGame()
+      dr.endGame()
     })
+
+    it('should callback when game ends', done => {
+      dr.onEnd = () => done()
+      dr.startGame()
+      dr.endGame()
+    })
+
+    it('should callback groups after draw', done => {
+
+      dr.onDraw = (groups) => done()
+
+      dr.addPlayer('Mark')
+      dr.addPlayer('Jenny')
+      dr.addPlayer('Henric')
+      dr.addPlayer('Bronko')
+
+      dr.endGame()
+    })
+
   })
 
   describe('draw algorithm', () => {
     it('must generate at least one group', () => {
-      let lr = new Drawer(groupSize=2, duration=0.1)
-      lr.startGame()
-      lr.addPlayer('John Snow')
-      lr.endGame()
-      assert.isAbove(lr.groups.length, 0)
+      let dr = new Drawer(groupSize=2, duration=0.1)
+      dr.startGame()
+      dr.addPlayer('John Snow')
+      dr.endGame()
+      assert.isAbove(dr.groups.length, 0)
 
     })
 
     xit('there should never be a group with just one player', (done) => {
-      let lr = new Drawer(groupSize=2, duration=0.1)
-      lr.startGame()
-      lr.addPlayer('Peter')
-      lr.addPlayer('Mark')
-      lr.addPlayer('Marry')
-      lr.endGame()
-      assert.typeOf(lr.groups, 'array', 'groups is an array')
-      assert.isAbove(lr.groups.length, 0)
+      let dr = new Drawer(groupSize=2, duration=0.1)
+      dr.startGame()
+      dr.addPlayer('Peter')
+      dr.addPlayer('Mark')
+      dr.addPlayer('Marry')
+      dr.endGame()
+      assert.typeOf(dr.groups, 'array', 'groups is an array')
+      assert.isAbove(dr.groups.length, 0)
 
-      lr.groups.forEach((group, index, done) => {
+      dr.groups.forEach((group, index, done) => {
         // console.log(group)
         assert.notEqual(group.length, 1)
       })
