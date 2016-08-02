@@ -1,11 +1,11 @@
 const assert = require('chai').assert;
-const LunchRoulette = require('../lunch_roulette')
+const Drawer = require('../drawer')
 
-describe('Lunch Roulette', () => {
+describe('Drawer', () => {
 
   describe('Check game mechanics', () => {
 
-    lr = new LunchRoulette(groupSize=3, duration=0.1)
+    lr = new Drawer(groupSize=3, duration=0.1)
 
     after(() => delete lr)
 
@@ -39,7 +39,7 @@ describe('Lunch Roulette', () => {
 
   describe('callbacks', () => {
     it('should callback groups after ending', done => {
-      lr = new LunchRoulette(groupSize=2, duration=0.1)
+      lr = new Drawer(groupSize=2, duration=0.1)
       lr.onGroupsReady = (groups) => done()
 
       lr.addPlayer('Mark')
@@ -48,13 +48,13 @@ describe('Lunch Roulette', () => {
       lr.addPlayer('Bronko')
 
       lr.endGame()
-      
+
     })
   })
 
   describe('draw algorithm', () => {
     it('must generate at least one group', () => {
-      let lr = new LunchRoulette(groupSize=2, duration=0.1)
+      let lr = new Drawer(groupSize=2, duration=0.1)
       lr.startGame()
       lr.addPlayer('John Snow')
       lr.endGame()
@@ -63,7 +63,7 @@ describe('Lunch Roulette', () => {
     })
 
     xit('there should never be a group with just one player', (done) => {
-      let lr = new LunchRoulette(groupSize=2, duration=0.1)
+      let lr = new Drawer(groupSize=2, duration=0.1)
       lr.startGame()
       lr.addPlayer('Peter')
       lr.addPlayer('Mark')
