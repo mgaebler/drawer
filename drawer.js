@@ -20,7 +20,6 @@ module.exports = class Drawer {
       if(secondsLeft % 10 === 0){
         console.log('Seconds to go:', secondsLeft)
       }
-
       // let the game end after a given time
       if (this.endTime < Date.now()){
         this.endGame()
@@ -72,19 +71,19 @@ module.exports = class Drawer {
     // execute tick events
     this.tickEvents.forEach(e => {
       let timeLeft = this.getTimeLeft()
-      e(timeLeft.inSeconds, timeLeft.inPercent)
+      e(timeLeft)
     })
   }
 
   //'Now people can join in by writing lunch in'
   addPlayer(player){
     this.players.add(player)
-    this.addPlayerEvents.forEach((e) => e())
+    this.addPlayerEvents.forEach((e) => e(player))
   }
 
   remPlayer(player){
     this.players.delete(player)
-    this.remPlayerEvents.forEach((e) => e())
+    this.remPlayerEvents.forEach((e) => e(player))
   }
 
   startGame() {
