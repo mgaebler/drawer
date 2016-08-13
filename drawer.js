@@ -10,6 +10,7 @@ module.exports = class Drawer extends EventEmitter {
     this.players = new Set()
     this.groupSize = groupSize
     this.state = 'initialized'
+    this.currentState
     this.groups = []
 
     this.on('tick', secondsLeft => {
@@ -23,6 +24,13 @@ module.exports = class Drawer extends EventEmitter {
       }
     })
   }
+
+  set state(state) {
+    this.emit('stateChange', state)
+    this.currentState = state
+  }
+
+  get state() { return this.currentState }
 
   getTotalDuration(){
     return (this.endTime - this.startTime) / 1000
