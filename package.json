@@ -1,13 +1,14 @@
 {
-  "name": "lunchroulette",
+  "name": "drawer",
   "version": "1.0.0",
-  "description": "Find a lunchpartner randomly.",
+  "description": "Gives you basic draw functionality.",
   "main": "drawer.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "bin/mocha"
   },
   "keywords": [
-    "lunch"
+    "game",
+    "draw"
   ],
   "author": "marian.gaebler@gmail.com",
   "license": "MIT",
