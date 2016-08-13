@@ -14,7 +14,7 @@ describe('Drawer', () => {
       dr.addPlayer('Jenny')
       dr.addPlayer('Henric')
       dr.addPlayer('Bronko')
-      
+
       assert.equal(dr.players.size, 4)
     })
 
@@ -44,20 +44,20 @@ describe('Drawer', () => {
     afterEach(() => delete(dr))
 
     it('should callback when game starts', done => {
-      dr.onStart = () => done()
+      dr.on('start', ()=> done())
       dr.startGame()
       dr.endGame()
     })
 
     it('should callback when game ends', done => {
-      dr.onEnd = () => done()
+      dr.on('end', () => done())
       dr.startGame()
       dr.endGame()
     })
 
     it('should callback groups after draw', done => {
 
-      dr.onDraw = (groups) => done()
+      dr.on('draw', (groups) => done())
 
       dr.addPlayer('Mark')
       dr.addPlayer('Jenny')
@@ -69,7 +69,7 @@ describe('Drawer', () => {
 
     it('should callback after adding a player', done => {
 
-      dr.onPlayerAdd = () => done()
+      dr.on('addPlayer', () => done())
       dr.addPlayer('Mark')
       dr.endGame()
 
@@ -77,7 +77,7 @@ describe('Drawer', () => {
 
     it('should callback after removing a player', done => {
 
-      dr.onPlayerRem = () => done()
+      dr.on('remPlayer', () => done())
       dr.addPlayer('Mark')
       dr.remPlayer('Mark')
       dr.endGame()

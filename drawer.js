@@ -1,6 +1,10 @@
-module.exports = class Drawer {
+EventEmitter = require('events').EventEmitter
+
+
+module.exports = class Drawer extends EventEmitter {
   // Start a join time window'
   constructor (groupSize=2, duration=60) {
+    super()
     if(groupSize < 2) throw 'A group must have at least a size of 2.'
     this.duration = duration * 60 * 1000;
     this.players = new Set()
@@ -8,47 +12,16 @@ module.exports = class Drawer {
     this.state = 'initialized'
     this.groups = []
 
-    this.drawEvents = []
-    this.tickEvents = []
-    this.startEvents = []
-    this.endEvents = []
-    this.addPlayerEvents = []
-    this.remPlayerEvents = []
-
-    this.onTick = (secondsLeft) => {
+    this.on('tick', secondsLeft => {
       // talk every tenth second
       if(secondsLeft % 10 === 0){
         console.log('Seconds to go:', secondsLeft)
       }
-      // let the game end after a given time
+      // let game end after a given time
       if (this.endTime < Date.now()){
         this.endGame()
       }
-    }
-  }
-
-  set onTick (callback) {
-    this.tickEvents.push(callback)
-  }
-
-  set onStart (callback) {
-    this.startEvents.push(callback)
-  }
-
-  set onEnd (callback) {
-    this.endEvents.push(callback)
-  }
-
-  set onDraw (callback) {
-    this.drawEvents.push(callback)
-  }
-
-  set onPlayerAdd (callback) {
-    this.addPlayerEvents.push(callback)
-  }
-
-  set onPlayerRem (callback) {
-    this.remPlayerEvents.push(callback)
+    })
   }
 
   getTotalDuration(){
@@ -64,26 +37,24 @@ module.exports = class Drawer {
     };
   }
 
-
   tick() {
     // ticks every second
     this.tickEngine = setTimeout(this.tick.bind(this), 1000)
     // execute tick events
-    this.tickEvents.forEach(e => {
+    this.emit('tick', e => {
       let timeLeft = this.getTimeLeft()
       e(timeLeft)
     })
   }
 
-  //'Now people can join in by writing lunch in'
   addPlayer(player){
     this.players.add(player)
-    this.addPlayerEvents.forEach((e) => e(player))
+    this.emit('addPlayer', e => e(player))
   }
 
   remPlayer(player){
     this.players.delete(player)
-    this.remPlayerEvents.forEach((e) => e(player))
+    this.emit('remPlayer', e => e(player))
   }
 
   startGame() {
@@ -92,7 +63,7 @@ module.exports = class Drawer {
     this.endTime = this.startTime + this.duration
     this.tick()
     this.state = 'running'
-    this.startEvents.forEach(e => e(this.startTime, this.endTime))
+    this.emit('start', this.startTime, this.endTime)
   }
 
   abortGame() {
@@ -105,7 +76,7 @@ module.exports = class Drawer {
     clearTimeout(this.tickEngine)
     this.state = 'ended'
     // console.log('Game ended')
-    this.endEvents.forEach(e => e(this.startTime, this.endTime))
+    this.emit('end', this.startTime, this.endTime)
     this.generateGroups()
   }
 
@@ -130,6 +101,6 @@ module.exports = class Drawer {
       }
     }
 
-    this.drawEvents.forEach((event) => event(this.groups))
+    this.emit('draw', event => event(this.groups))
   }
 }
