@@ -14,7 +14,7 @@ describe('Drawer', () => {
       dr.addPlayer('Jenny')
       dr.addPlayer('Henric')
       dr.addPlayer('Bronko')
-      // count 3 players
+      
       assert.equal(dr.players.size, 4)
     })
 
