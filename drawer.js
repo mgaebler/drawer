@@ -49,20 +49,17 @@ module.exports = class Drawer extends EventEmitter {
     // ticks every second
     this.tickEngine = setTimeout(this.tick.bind(this), 1000)
     // execute tick events
-    this.emit('tick', e => {
-      let timeLeft = this.getTimeLeft()
-      e(timeLeft)
-    })
+    this.emit('tick', this.getTimeLeft())
   }
 
   addPlayer(player){
     this.players.add(player)
-    this.emit('addPlayer', e => e(player))
+    this.emit('addPlayer', player)
   }
 
   remPlayer(player){
     this.players.delete(player)
-    this.emit('remPlayer', e => e(player))
+    this.emit('remPlayer', player)
   }
 
   startGame() {
