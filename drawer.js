@@ -106,6 +106,6 @@ module.exports = class Drawer extends EventEmitter {
       }
     }
 
-    this.emit('draw', event => event(this.groups))
+    this.emit('draw', this.groups)
   }
 }
