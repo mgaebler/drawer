@@ -2,7 +2,7 @@ EventEmitter = require('events').EventEmitter
 
 
 module.exports = class Drawer extends EventEmitter {
-  // Start a join time window'
+  // Start a join time window
   constructor (groupSize=2, duration=60) {
     super()
     if(groupSize < 2) throw 'A group must have at least a size of 2.'
@@ -16,7 +16,7 @@ module.exports = class Drawer extends EventEmitter {
     this.on('tick', secondsLeft => {
       // talk every tenth second
       if(secondsLeft % 10 === 0){
-        console.log('Seconds to go:', secondsLeft)
+        console.info('Seconds to go:', secondsLeft)
       }
       // let game end after a given time
       if (this.endTime < Date.now()){
@@ -30,7 +30,9 @@ module.exports = class Drawer extends EventEmitter {
     this.currentState = state
   }
 
-  get state() { return this.currentState }
+  get state() { 
+    return this.currentState 
+  }
 
   getTotalDuration(){
     return (this.endTime - this.startTime) / 1000
@@ -63,7 +65,7 @@ module.exports = class Drawer extends EventEmitter {
   }
 
   startGame() {
-    // console.log('Game started')
+    console.info('Game started')
     this.startTime = Date.now()
     this.endTime = this.startTime + this.duration
     this.tick()
@@ -73,6 +75,7 @@ module.exports = class Drawer extends EventEmitter {
 
   abortGame() {
     clearTimeout(this.tickEngine)
+    console.info('Game aborted')
   }
 
   //'Game ends'
@@ -80,7 +83,7 @@ module.exports = class Drawer extends EventEmitter {
     //'stop ticking'
     clearTimeout(this.tickEngine)
     this.state = 'ended'
-    // console.log('Game ended')
+    console.info('Game ended')
     this.emit('end', this.startTime, this.endTime)
     this.generateGroups()
   }
@@ -91,7 +94,7 @@ module.exports = class Drawer extends EventEmitter {
 
     // @todo this has to be more random
     for(let player of this.players){
-      // pop players and group them
+      // pop players and group
       if(!this.groups[groupCount]) {
         this.groups[groupCount] = []
       }

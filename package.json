@@ -1,7 +1,7 @@
 {
-  "name": "drawer",
+  "name": "game-drawer",
   "version": "0.1.0",
-  "description": "Gives you basic draw functionality.",
+  "description": "Gives you basic game draw functionality.",
   "repository": {
     "type": "git",
     "url": "https://github.com/mgaebler/drawer.git"
