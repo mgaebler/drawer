@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const TimeBasedGame = require('../time-based-game')
+const TimeBasedGame = require('../lib/time-based-game')
 
 describe('TimeBasedGame', () => {
 

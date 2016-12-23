@@ -1,5 +1,6 @@
 const assert = require('chai').assert;
-const Drawer = require('../drawer')
+const Drawer = require('../lib/drawer')
+
 
 describe('Drawer', () => {
 
@@ -37,7 +38,7 @@ describe('Drawer', () => {
       game.addPlayer('Mark')
       game.addPlayer('Marry')
       game.endGame()
-      
+
       assert.typeOf(game.groups, 'array', 'groups is an array')
       assert.isAbove(game.groups.length, 0)
 

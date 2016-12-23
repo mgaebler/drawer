@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/mgaebler/drawer.git"
   },
-  "main": "drawer.js",
+  "main": "lib/drawer.js",
   "scripts": {
     "test": "bin/mocha"
   },
