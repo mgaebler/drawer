@@ -3,10 +3,16 @@ const TimeBasedGame = require('../lib/time-based-game')
 
 describe('TimeBasedGame', () => {
 
-  describe('Game mechanics', () => {
+  describe('Basic Game mechanics', () => {
+    xit('players cannot be added until the game is running', () => {
 
-    let game = new TimeBasedGame(groupSize=3, duration=0.1)
+    })
+  })
 
+  describe('Running Game mechanics', () => {
+
+    let game;
+    beforeEach(() => game = new TimeBasedGame(groupSize=3, duration=0.1))
     after(() => delete game)
 
     it('should show the correct number of players', () => {
@@ -19,7 +25,12 @@ describe('TimeBasedGame', () => {
     })
 
     it('should remove duplicates', () => {
+
+      game.addPlayer('Henric')
+      game.addPlayer('Bronko')
       game.addPlayer('Mark')
+      game.addPlayer('Mark')
+      game.addPlayer('Jenny')
       game.addPlayer('Jenny')
 
       assert.equal(game.players.size, 4)
